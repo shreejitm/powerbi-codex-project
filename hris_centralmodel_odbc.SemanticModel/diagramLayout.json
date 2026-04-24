@@ -1,0 +1,269 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 421.6318647998088
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 7246.0401667357219,
+            "y": 221.1752888500103
+          },
+          "nodeIndex": "Measure Table",
+          "nodeLineageTag": "ee88a9d3-0bd3-47ef-bef2-e6a9d17bd49a",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 14
+        },
+        {
+          "location": {
+            "x": 74.25,
+            "y": 56.250000000000114
+          },
+          "nodeIndex": "app_employees_credentialtype",
+          "nodeLineageTag": "d0d8708f-ea25-4150-a793-41571fb9234e",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 354.11425296633865,
+            "y": 56.250000000000114
+          },
+          "nodeIndex": "app_employees_employee",
+          "nodeLineageTag": "4e38d70a-687b-47d8-a55f-3aae79b78d4d",
+          "size": {
+            "height": 418.75,
+            "width": 430.25
+          },
+          "zIndex": 15
+        },
+        {
+          "location": {
+            "x": 952.05512352018309,
+            "y": 408.34495324377258
+          },
+          "nodeIndex": "app_employees_workbase",
+          "nodeLineageTag": "dd84809d-82c7-49bc-8265-e4b17e0ccb1d",
+          "size": {
+            "height": 234,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 1906.6374486000309,
+            "y": 268.54848277171857
+          },
+          "nodeIndex": "app_positions_department",
+          "nodeLineageTag": "c1321a37-34cd-42fd-a8b4-b923a4d3c037",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 1147.5000000000002,
+            "y": 56.250000000000114
+          },
+          "nodeIndex": "app_positions_location",
+          "nodeLineageTag": "232c36f0-21b3-4822-9d59-b22e79cf4f65",
+          "size": {
+            "height": 168.25,
+            "width": 234
+          },
+          "zIndex": 11
+        },
+        {
+          "location": {
+            "x": 1372.4144373044264,
+            "y": 410.25000000000011
+          },
+          "nodeIndex": "app_positions_positiontype",
+          "nodeLineageTag": "b3b0c65c-babe-4d99-89c1-d59400624ee4",
+          "size": {
+            "height": 305,
+            "width": 347.75
+          },
+          "zIndex": 12
+        },
+        {
+          "location": {
+            "x": 62.2159484272203,
+            "y": 1556.749109335723
+          },
+          "nodeIndex": "vws_credential_fact",
+          "nodeLineageTag": "bd3224d2-f315-4a03-9678-606838658a3c",
+          "size": {
+            "height": 434.02613792121133,
+            "width": 485.26264356901333
+          },
+          "zIndex": 16
+        },
+        {
+          "location": {
+            "x": 2478,
+            "y": 56.250000000000114
+          },
+          "nodeIndex": "vws_date_dimension",
+          "nodeLineageTag": "ea9380e8-be12-4f9a-86a3-7d61028bf685",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 13
+        },
+        {
+          "location": {
+            "x": 763.042837418955,
+            "y": 1675.6885357158462
+          },
+          "nodeIndex": "vws_employee_employment_detail",
+          "nodeLineageTag": "50f13a7d-7c00-4899-8e26-c024479f165f",
+          "size": {
+            "height": 418.75,
+            "width": 481.5
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1511.9276182556805,
+            "y": 1114.8600662726553
+          },
+          "nodeIndex": "vws_position_dimension",
+          "nodeLineageTag": "c4748759-c70d-4cbc-92b0-9a6c8053cb83",
+          "size": {
+            "height": 440.93331472388957,
+            "width": 389.02664619627853
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 2369.3502907345137,
+            "y": 833.48657222373947
+          },
+          "nodeIndex": "vws_manager_information",
+          "nodeLineageTag": "466b15e8-ba71-45a5-9ebe-96f63d6e79c9",
+          "size": {
+            "height": 425.92830983891054,
+            "width": 445.39997208583418
+          },
+          "zIndex": 17
+        },
+        {
+          "location": {
+            "x": 1943.1714883908992,
+            "y": 615.0871959884156
+          },
+          "nodeIndex": "dim_category",
+          "nodeLineageTag": "bd584173-5664-4416-bb80-52fb2b5f0f1e",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 6863.0966702636433,
+            "y": 550.84984854339234
+          },
+          "nodeIndex": "Dim_Title1",
+          "nodeLineageTag": "07233fc0-302c-438c-9163-ed05572bb0a7",
+          "size": {
+            "height": 167.7765910188499,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 7114.5983703119382,
+            "y": 521.16262111700246
+          },
+          "nodeIndex": "Effective Dates (Sheet1)",
+          "nodeLineageTag": "e8423746-42e2-4cc2-a5b3-a8f74a470ed6",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 18
+        },
+        {
+          "location": {
+            "x": 7018.2302351117469,
+            "y": 848.29618596510511
+          },
+          "nodeIndex": "Ministry Staffing",
+          "nodeLineageTag": "6428bf48-519b-425e-95d3-fe84e98f939b",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 19
+        },
+        {
+          "location": {
+            "x": 7307.9077427889606,
+            "y": 736.090258007482
+          },
+          "nodeIndex": "Staffing Adjustment",
+          "nodeLineageTag": "e0674a6b-8e54-4273-8540-d24243abe9fe",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 7634.7019946515047,
+            "y": 576.44431228073415
+          },
+          "nodeIndex": "SummaryLabels",
+          "nodeLineageTag": "31838f1e-b7e4-40f1-b81a-dbb124cd6ef9",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 3173.9857514852765,
+            "y": 295.96859349743687
+          },
+          "nodeIndex": "vw_temporary_vacancies",
+          "nodeLineageTag": "729f616c-1711-4347-85b1-ba10d57597bd",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 2
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 62.851037154372158,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

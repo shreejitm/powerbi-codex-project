@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "hris_centralmodel_odbc"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "66b0b850-d64d-4589-b82d-dc532e0f16d4"
+  }
+}

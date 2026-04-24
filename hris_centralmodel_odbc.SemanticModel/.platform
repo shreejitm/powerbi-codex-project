@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "hris_centralmodel_odbc"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7105533e-d807-4726-a46e-2f653513b9e7"
+  }
+}
