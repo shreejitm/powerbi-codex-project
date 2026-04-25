@@ -1,0 +1,194 @@
+table 'Ministry Staffing'
+	lineageTag: 6428bf48-519b-425e-95d3-fe84e98f939b
+
+	column Name
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 2393116d-9a80-4422-8eb0-37b64f277afc
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Title1
+		dataType: string
+		lineageTag: 5b1de6dc-503d-40e9-a353-611bae1c9cb2
+		summarizeBy: none
+		sourceColumn: Title1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Title2
+		dataType: string
+		lineageTag: 2dcd320c-8ce7-43b1-9227-5ea9923d3dbe
+		summarizeBy: none
+		sourceColumn: Title2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Title3
+		dataType: string
+		lineageTag: 0f85d153-66bb-4cfa-b7d0-22c1f244713e
+		summarizeBy: none
+		sourceColumn: Title3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Pay Period'
+		dataType: string
+		lineageTag: cfc37eda-80b5-416e-9076-8a953c852be8
+		summarizeBy: none
+		sourceColumn: Pay Period
+
+		annotation SummarizationSetBy = Automatic
+
+	column Merged
+		dataType: string
+		lineageTag: 79527fd1-66b0-4c0e-8760-5dfc8ab9a6a8
+		summarizeBy: none
+		sourceColumn: Merged
+
+		annotation SummarizationSetBy = Automatic
+
+	column FTTE
+		dataType: double
+		lineageTag: 0c6034e1-05b3-4f1f-8c89-fc5d799eea1a
+		summarizeBy: sum
+		sourceColumn: FTTE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SortOrder
+		dataType: int64
+		formatString: 0
+		lineageTag: b38aa7d5-4d6c-4058-baf3-92ea83051195
+		summarizeBy: sum
+		sourceColumn: SortOrder
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column FTTE_For_Matrix
+		dataType: double
+		lineageTag: cc4b21e6-33c6-4af3-85ec-8c0e5aa7a804
+		summarizeBy: sum
+		sourceColumn: FTTE_For_Matrix
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: c5f28289-71f3-4438-b069-3a4064e043e0
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column pay_period_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 31e485ed-3455-4078-b02f-1c6166145335
+		summarizeBy: sum
+		sourceColumn: pay_period_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Match Flag' =
+			
+			IF(
+			    ISBLANK('Ministry Staffing'[pay_period_number]) || ISBLANK('Ministry Staffing'[payperiodextract]),
+			    BLANK(),
+			    IF(
+			        'Ministry Staffing'[pay_period_number]= 'Ministry Staffing'[payperiodextract],
+			        "Yes",
+			        "No"
+			    ))
+		lineageTag: 09c91050-3351-497a-9086-5f5044427f45
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column PayPeriod =
+			
+			VAR CurrentDate = 'Ministry Staffing'[Name]
+			RETURN
+			CALCULATE(
+			    MAX('Effective Dates (Sheet1)'[PR#]),
+			    FILTER(
+			        'Effective Dates (Sheet1)',
+			        'Effective Dates (Sheet1)'[From] <= CurrentDate &&
+			        'Effective Dates (Sheet1)'[To] >= CurrentDate
+			    )
+			)
+		formatString: 0
+		lineageTag: ef70c708-fe07-4dec-b365-9586ce90c8a9
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column payperiodextract =
+			
+			MOD([PayPeriod], 100)
+		formatString: 0
+		lineageTag: 29c00a23-9117-4a8a-924e-b1e10e085c78
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Ministry Staffing' = m
+		mode: import
+		source = ```
+				let
+				    Source = Table.NestedJoin(Query2, {"Name", "Pay Period", "Title1"}, #"Calculated Total", {"Name", "Pay Period", "Title1"}, "Calculated Total", JoinKind.LeftOuter),
+				    #"Expanded Calculated Total" = Table.ExpandTableColumn(Source, "Calculated Total", {"Calculated Total"}, {"Calculated Total.1"}),
+				    #"Added Custom" = Table.AddColumn(#"Expanded Calculated Total", "FTTE", each if [Title1] <> "Staffing Roll"
+				   and [Title2] = null and [Title3] = null
+				then [Calculated Total.1]
+				else [Value]),
+				    #"Removed Columns" = Table.RemoveColumns(#"Added Custom",{"Value", "Component Value", "Calculated Total.1"}),
+				    #"Added Custom1" = Table.AddColumn(#"Removed Columns", "SortOrder", each if [Title1] = "Entitlement Staffing" then 1 else if [Title1] = "Additional Staffing" then 2 else if [Title1] = "Attached Teacher" then 3 else if [Title1] = "Learning Support" then 4 else if [Title1] = "Staffing Transfer Agreement" then 5 else if [Title1] = "Staffing Roll" then 6 else 999),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom1",{{"SortOrder", Int64.Type}}),
+				    #"Added Custom2" = Table.AddColumn(#"Changed Type1", "FTTE_For_Matrix", each if
+				    [Title2] <> null and Text.Trim([Title2]) <> ""
+				    and ( [Title3] = null or Text.Trim([Title3]) = "" )
+				then
+				    [FTTE]
+				else
+				    null),
+				    #"Inserted Year" = Table.AddColumn(#"Added Custom2", "Year", each Date.Year([Name]), Int64.Type),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Inserted Year",{{"FTTE_For_Matrix", type number}, {"FTTE", type number}, {"Merged", type text}, {"Pay Period", type text}, {"Title3", type text}, {"Title2", type text}, {"Title1", type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Year] = 2026)),
+				    #"Trimmed Text" = Table.TransformColumns(#"Filtered Rows",{{"Pay Period", Text.Trim, type text}}),
+				    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"Pay Period", Text.Clean, type text}}),
+				    #"Inserted Text After Delimiter" = Table.AddColumn(
+				    #"Cleaned Text",
+				    "pay_period_number",
+				    each 
+				        try 
+				            Number.FromText(
+				                Text.BeforeDelimiter(
+				                    Text.Select([Pay Period], {"0".."9","-"}),
+				                    "-"
+				                )
+				            )
+				        otherwise null,
+				    Int64.Type
+				),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Inserted Text After Delimiter",{{"pay_period_number", Int64.Type}}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Changed Type2", each true)
+				in
+				    #"Filtered Rows1"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

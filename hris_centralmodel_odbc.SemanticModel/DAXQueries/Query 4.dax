@@ -1,0 +1,25 @@
+EVALUATE
+FILTER (
+    SUMMARIZECOLUMNS (
+        'app_positions_department'[parent_department],
+        'app_positions_department'[department_name],
+        'app_positions_positiontype'[position_name],
+        'app_employees_employee'[FullName],
+        'vws_employee_employment_detail'[employment_status],
+
+        "Count of current employees", [Count of current employees],
+        "EDP FTTE (Current)", [EDP FTTE (Current)]
+    ),
+    CALCULATE (
+        SELECTEDVALUE ( 'vws_employee_employment_detail'[employment_status] ),
+        'vws_employee_employment_detail'[employment_status] = "Current"
+    ) = "Current"
+)
+
+EVALUATE
+SUMMARIZECOLUMNS(
+    'vws_employee_employment_detail'[employment_status],
+    "Employees", [Count of employees]
+)
+
+    	

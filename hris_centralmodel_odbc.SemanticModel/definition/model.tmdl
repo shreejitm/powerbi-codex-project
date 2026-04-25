@@ -1,0 +1,48 @@
+model Model
+	culture: en-NZ
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-NZ
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Parameters
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup dimension
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup facts
+
+	annotation PBI_QueryGroupOrder = 2
+
+annotation PBI_QueryOrder = ["Source_Payroll","Database","Source_odbc","Query1","vws_credential_fact","dim_category","app_employees_credentialtype","app_employees_employee","app_employees_workbase","app_positions_department","app_positions_location","app_positions_positiontype","Measure Table","vws_date_dimension","vws_employee_employment_detail","vws_position_dimension","vws_manager_information","Source","CleanUpData","Query2","Calculated Total","Ministry Staffing","Effective Dates (Sheet1)","Dim_Title1","Staffing Adjustment","vw_temporary_vacancies"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DaxQueryView_Desktop","DevMode"]
+
+ref table vws_credential_fact
+ref table vws_date_dimension
+ref table app_employees_credentialtype
+ref table app_employees_employee
+ref table app_employees_workbase
+ref table app_positions_department
+ref table app_positions_location
+ref table app_positions_positiontype
+ref table 'Measure Table'
+ref table vws_employee_employment_detail
+ref table vws_position_dimension
+ref table vws_manager_information
+ref table dim_category
+ref table 'Ministry Staffing'
+ref table 'Effective Dates (Sheet1)'
+ref table Dim_Title1
+ref table 'Staffing Adjustment'
+ref table SummaryLabels
+ref table vw_temporary_vacancies
+
+ref cultureInfo en-NZ
+

@@ -1,0 +1,63 @@
+table 'Effective Dates (Sheet1)'
+	lineageTag: e8423746-42e2-4cc2-a5b3-a8f74a470ed6
+
+	column PR#
+		dataType: int64
+		formatString: 0
+		lineageTag: 23767df3-38e0-4b4b-bd75-fbcfdbcdd3c1
+		summarizeBy: sum
+		sourceColumn: PR#
+
+		annotation SummarizationSetBy = Automatic
+
+	column NPR
+		dataType: int64
+		formatString: 0
+		lineageTag: 1585b0ac-3b08-41ff-abc0-b9a29d12b57e
+		summarizeBy: sum
+		sourceColumn: NPR
+
+		annotation SummarizationSetBy = Automatic
+
+	column From
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9fea9ba4-f3fc-4647-b96f-506c3a43d588
+		summarizeBy: none
+		sourceColumn: From
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column To
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: bc3dd505-5c2c-4e62-83e1-54d34c016775
+		summarizeBy: none
+		sourceColumn: To
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition 'Effective Dates (Sheet1)' = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://kotakureo.sharepoint.com/sites/PMOActivity/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each [Folder Path] = "https://kotakureo.sharepoint.com/sites/PMOActivity/Shared Documents/General/PowerBI/Referenced data/"),
+				    #"Pay Period dates xlsx_https://kotakureo sharepoint com/sites/PMOActivity/Shared Documents/General/PowerBI/Referenced data/" = #"Filtered Rows"{[Name="Pay Period dates.xlsx",#"Folder Path"="https://kotakureo.sharepoint.com/sites/PMOActivity/Shared Documents/General/PowerBI/Referenced data/"]}[Content],
+				    #"Imported Excel Workbook" = Excel.Workbook(#"Pay Period dates xlsx_https://kotakureo sharepoint com/sites/PMOActivity/Shared Documents/General/PowerBI/Referenced data/"),
+				    Sheet1_Sheet = #"Imported Excel Workbook"{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Column1", type any}, {"Column2", type any}, {"Effective Dates", type any}, {"Column4", type any}}),
+				    #"Promoted Headers1" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"PR#", Int64.Type}, {"NPR", Int64.Type}, {"From", type date}, {"To", type date}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

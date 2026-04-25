@@ -1,0 +1,58 @@
+relationship c8f07455-382d-17b8-79fa-bfbf78386361
+	fromColumn: vws_credential_fact.credential_type_id
+	toColumn: app_employees_credentialtype.credential_id
+
+relationship 99a7e13b-623b-ebf0-2528-14b68649dd24
+	fromColumn: app_positions_positiontype.department_id
+	toColumn: app_positions_department.department_id
+
+relationship 9983f918-21a2-6e5c-7e8c-8bf4e07bde2a
+	fromColumn: vws_employee_employment_detail.workbase
+	toColumn: app_employees_workbase.workbase_id
+
+relationship AutoDetected_f3e87247-2043-4852-adc0-4a9d6e5e0074
+	fromColumn: vws_credential_fact.position_id
+	toColumn: vws_position_dimension.position_id
+
+relationship AutoDetected_7a728bdf-a40e-4ae1-b8ab-920727936a2e
+	fromColumn: vws_employee_employment_detail.position_id
+	toColumn: vws_position_dimension.position_id
+
+relationship d2ca814b-2f57-9891-1d0a-95d2f37caeea
+	fromColumn: vws_position_dimension.type_id
+	toColumn: app_positions_positiontype.position_type_id
+
+relationship 62598fa4-677f-c756-1473-8d3a109ee94a
+	fromColumn: vws_position_dimension.location_id
+	toColumn: app_positions_location.location_id
+
+relationship AutoDetected_621b8f22-5d58-49bf-8b41-73415586fdbf
+	fromColumn: vws_credential_fact.workbase_id
+	toColumn: app_employees_workbase.workbase_id
+
+relationship 99d6c8ad-299e-e612-22ea-b053a423ab00
+	fromColumn: vws_position_dimension.category_id
+	toColumn: dim_category.ID
+
+relationship AutoDetected_6f22a96e-3089-42b9-993a-dca146db1589
+	fromColumn: vws_credential_fact.employee_id
+	toColumn: app_employees_employee.employee_id
+
+relationship 855a9e15-8e77-51ab-3a59-2eb9c1f24c6c
+	fromColumn: vws_employee_employment_detail.employee_id
+	toColumn: app_employees_employee.employee_id
+
+relationship a09f3a81-012a-f08c-e3d3-48f88f2981ae
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: vws_manager_information.manager_position_id
+	toColumn: vws_position_dimension.manager_id
+
+relationship AutoDetected_b28965e8-664b-48ec-bf8f-32d2e528bf43
+	fromColumn: 'Ministry Staffing'.Title1
+	toColumn: Dim_Title1.Title1
+
+relationship d32a6525-f101-cbeb-f5b4-6419ed86cf8a
+	fromColumn: 'Ministry Staffing'.Name
+	toColumn: 'Effective Dates (Sheet1)'.To
+

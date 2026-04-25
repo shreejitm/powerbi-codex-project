@@ -1,0 +1,30 @@
+table vws_date_dimension
+	lineageTag: ea9380e8-be12-4f9a-86a3-7d61028bf685
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 29c963d4-697b-44e9-9799-bc3e2c7dfde6
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition vws_date_dimension = m
+		mode: import
+		queryGroup: dimension
+		source =
+				let
+				    Source = Odbc.DataSource(Source_odbc, [HierarchicalNavigation=true]),
+				    defaultdb_Database = Source{[Name=Database,Kind="Database"]}[Data],
+				    public_Schema = defaultdb_Database{[Name="public",Kind="Schema"]}[Data],
+				    vws_date_dimension_View = public_Schema{[Name="vws_date_dimension",Kind="View"]}[Data]
+				in
+				    vws_date_dimension_View
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

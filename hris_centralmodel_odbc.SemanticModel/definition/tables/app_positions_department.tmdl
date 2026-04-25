@@ -1,0 +1,75 @@
+table app_positions_department
+	lineageTag: c1321a37-34cd-42fd-a8b4-b923a4d3c037
+
+	column department_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 637b6ddf-5d45-4135-8d9b-6e101d0d2e5b
+		summarizeBy: none
+		sourceColumn: department_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column department_name
+		dataType: string
+		lineageTag: 81ecac4c-af54-4e02-896a-224b27d60bc8
+		summarizeBy: none
+		sourceColumn: department_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 7fb96068-977d-4813-a3cc-ab52c28d15c5
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column parent_department_id
+		dataType: double
+		formatString: 0
+		lineageTag: b63312be-98e8-4a9f-a19e-85c7433951d3
+		summarizeBy: none
+		sourceColumn: parent_department_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column bware_area_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f2820c2c-d1ee-42bd-a9c0-844c07fbe00f
+		summarizeBy: none
+		sourceColumn: bware_area_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column parent_department
+		dataType: string
+		lineageTag: 06b061ab-6eca-4f1a-8aa7-93196f0b43aa
+		summarizeBy: none
+		sourceColumn: parent_department
+
+		annotation SummarizationSetBy = Automatic
+
+	partition app_positions_department = m
+		mode: import
+		queryGroup: dimension
+		source =
+				let
+				    Source = Odbc.DataSource(Source_odbc, [HierarchicalNavigation=true]),
+				    defaultdb_Database = Source{[Name=Database,Kind="Database"]}[Data],
+				    public_Schema = defaultdb_Database{[Name="public",Kind="Schema"]}[Data],
+				    app_positions_department_Table = public_Schema{[Name="app_positions_department",Kind="Table"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(app_positions_department_Table,{"id", "name", "description", "parent_department_id", "bware_area_id"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Removed Other Columns", {"parent_department_id"}, #"Removed Other Columns", {"id"}, "Removed Other Columns", JoinKind.LeftOuter),
+				    #"Replaced Value" = Table.ReplaceValue(#"Merged Queries",13,23,Replacer.ReplaceValue,{"parent_department_id"}),
+				    #"Expanded Removed Other Columns" = Table.ExpandTableColumn(#"Replaced Value", "Removed Other Columns", {"name"}, {"parent_department"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Expanded Removed Other Columns",{{"id", "department_id"}, {"name", "department_name"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

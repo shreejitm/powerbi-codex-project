@@ -1,0 +1,46 @@
+table app_positions_location
+	lineageTag: 232c36f0-21b3-4822-9d59-b22e79cf4f65
+
+	column location_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f0fb119c-bc24-4b06-bc3f-e25231b8e905
+		summarizeBy: none
+		sourceColumn: location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_name
+		dataType: string
+		lineageTag: b931e8c0-3095-4c99-b30b-b8161ff26574
+		summarizeBy: none
+		sourceColumn: location_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column active
+		dataType: string
+		lineageTag: f7d9f0b5-1933-4241-bcb0-a92231b24348
+		summarizeBy: none
+		sourceColumn: active
+
+		annotation SummarizationSetBy = Automatic
+
+	partition app_positions_location = m
+		mode: import
+		queryGroup: dimension
+		source =
+				let
+				    Source = Odbc.DataSource(Source_odbc, [HierarchicalNavigation=true]),
+				    defaultdb_Database = Source{[Name=Database,Kind="Database"]}[Data],
+				    public_Schema = defaultdb_Database{[Name="public",Kind="Schema"]}[Data],
+				    app_positions_location_Table = public_Schema{[Name="app_positions_location",Kind="Table"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(app_positions_location_Table,{"id", "name", "active"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"id", "location_id"}, {"name", "location_name"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

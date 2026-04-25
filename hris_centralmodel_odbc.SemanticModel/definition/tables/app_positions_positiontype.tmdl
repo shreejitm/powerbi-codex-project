@@ -1,0 +1,63 @@
+table app_positions_positiontype
+	lineageTag: b3b0c65c-babe-4d99-89c1-d59400624ee4
+
+	column position_type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 08e7102f-209b-46c4-90c3-8ace3fe34c9c
+		summarizeBy: none
+		sourceColumn: position_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_name
+		dataType: string
+		lineageTag: 65187a04-5e26-44c7-9ac5-44a7c439cb75
+		summarizeBy: none
+		sourceColumn: position_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 83ae41fe-46be-474f-89b3-7058abfb5332
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column department_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d4866ceb-0c5f-4339-9014-017c04fe2b19
+		summarizeBy: none
+		sourceColumn: department_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column designation_code
+		dataType: string
+		lineageTag: 37a0e1d7-6add-44f9-9399-8a75f4c2f4ed
+		summarizeBy: none
+		sourceColumn: designation_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition app_positions_positiontype = m
+		mode: import
+		queryGroup: dimension
+		source =
+				let
+				    Source = Odbc.DataSource(Source_odbc, [HierarchicalNavigation=true]),
+				    defaultdb_Database = Source{[Name=Database,Kind="Database"]}[Data],
+				    public_Schema = defaultdb_Database{[Name="public",Kind="Schema"]}[Data],
+				    app_positions_positiontype_Table = public_Schema{[Name="app_positions_positiontype",Kind="Table"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(app_positions_positiontype_Table,{"id", "name", "description", "department_id", "designation_code"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"id", "position_type_id"}, {"name", "position_name"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

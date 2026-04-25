@@ -1,0 +1,128 @@
+table vw_temporary_vacancies
+	lineageTag: 729f616c-1711-4347-85b1-ba10d57597bd
+
+	column position_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 936d21ad-2173-4695-afe3-dde57b6f195e
+		summarizeBy: sum
+		sourceColumn: position_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_name
+		dataType: string
+		lineageTag: 4fd49ccd-9900-4ff3-b3c2-e6064c9d18c6
+		summarizeBy: none
+		sourceColumn: position_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6fdebddb-88d1-426b-8503-977e52baec94
+		summarizeBy: sum
+		sourceColumn: manager_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column budget_fte
+		dataType: double
+		lineageTag: 9ac00a4e-30a7-4474-a2ad-bc12b8563103
+		summarizeBy: sum
+		sourceColumn: budget_fte
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column vacancy_type
+		dataType: string
+		lineageTag: 33041745-622c-49be-a3d0-91bace2a62fe
+		summarizeBy: none
+		sourceColumn: vacancy_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column acting_person
+		dataType: string
+		lineageTag: 654a2534-6d48-42b3-b8b8-f9c359e88f8f
+		summarizeBy: none
+		sourceColumn: acting_person
+
+		annotation SummarizationSetBy = Automatic
+
+	column future_joiner
+		dataType: string
+		lineageTag: 33df85f2-0476-4d2f-92bc-a60e803934a5
+		summarizeBy: none
+		sourceColumn: future_joiner
+
+		annotation SummarizationSetBy = Automatic
+
+	column future_start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0371061f-b9be-4726-9317-27af14209890
+		summarizeBy: none
+		sourceColumn: future_start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column joiner_status
+		dataType: string
+		lineageTag: bf706505-996f-4fda-9783-449148766330
+		summarizeBy: none
+		sourceColumn: joiner_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column employment_detail_start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 50b02bde-0772-45a6-b380-492ee11ad2ad
+		summarizeBy: none
+		sourceColumn: employment_detail_start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column employment_detail_end_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 7af83de6-ed21-4a36-b0aa-23799e3bfcdd
+		summarizeBy: none
+		sourceColumn: employment_detail_end_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column display_name
+		dataType: string
+		lineageTag: 9d729701-f94c-40fa-a1f0-bed7294a0326
+		summarizeBy: none
+		sourceColumn: display_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vw_temporary_vacancies = m
+		mode: import
+		queryGroup: dimension
+		source =
+				let
+				    Source = Odbc.DataSource(Source_odbc, [HierarchicalNavigation=true]),
+				    defaultdb_Database = Source{[Name="defaultdb",Kind="Database"]}[Data],
+				    public_Schema = defaultdb_Database{[Name="public",Kind="Schema"]}[Data],
+				    temporary_vw_fact_vacancies_View = public_Schema{[Name="temporary_vw_fact_vacancies",Kind="View"]}[Data]
+				in
+				    temporary_vw_fact_vacancies_View
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

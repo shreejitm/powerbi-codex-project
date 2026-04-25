@@ -1,0 +1,172 @@
+table 'Measure Table'
+	lineageTag: f67125cd-0f2d-4a5a-9a16-9ea9af380922
+
+	measure 'Count of employees' =
+			
+			DISTINCTCOUNT(vws_employee_employment_detail[employee_id])
+		formatString: 0
+		lineageTag: 59462221-135c-4a66-bbea-343bf8694bfb
+
+	measure 'Count of current employees' =
+			
+			CALCULATE(
+			    [Count of employees],
+			    vws_employee_employment_detail[employment_status]= "Current"
+			)
+		formatString: 0
+		lineageTag: af2540e4-5595-4a6f-b7fa-01fdd4ccd6d8
+
+	measure 'EDP FTTE' =
+			
+			SUM(vws_employee_employment_detail[edp_fte])
+		formatString: 0.00
+		lineageTag: cae2ac3a-fe34-4291-9193-190250021113
+
+	measure 'EDP FTTE (Current)' =
+			
+			CALCULATE(
+			    [EDP FTTE],
+			  vws_employee_employment_detail[employment_status]= "Current"
+			)
+		formatString: 0.00
+		lineageTag: 08716fe0-aff7-472a-a6cc-473776171191
+
+	measure 'Position FTTE' =
+			
+			sum(
+			    vws_position_dimension[position_fte]
+			    )
+		formatString: 0.00
+		lineageTag: ed05f0b2-6e92-49a9-8960-e863df1bdb3d
+
+	measure 'Remaining FTTE (Current)' =
+			
+			[Position FTTE (Active)] - [EDP FTTE (Current)]
+		formatString: 0.00
+		lineageTag: 6630db40-6b23-4671-9e8a-c6f6d6b75345
+
+	measure 'Position FTTE (Active)' =
+			
+			CALCULATE(
+			    [Position FTTE],
+			    vws_position_dimension[position_active] = 1)
+		formatString: 0.00
+		lineageTag: 7d5649d7-985c-4116-969d-ba43304d5a95
+
+	measure 'EDP FTTE (Current&Future)' =
+			
+			CALCULATE(
+			    [EDP FTTE],
+			  vws_employee_employment_detail[employment_status]<> "Past"
+			)
+		lineageTag: 78fc8a64-09eb-4062-8115-91a0ae4b2f6b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Remaining FTTE (Current&Future)' =
+			
+			[Position FTTE (Active)] - [EDP FTTE (Current&Future)]
+		lineageTag: 25440f2b-cdb5-40fb-8d41-b8787f0008db
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Current FTTE Available' =
+			
+			[Ministry FTTE] - [EDP FTTE (Current)]
+		lineageTag: d8fe67f0-52e8-4cbe-8d62-2358f59876b6
+
+	measure 'Ministry FTTE' =
+			
+			SUM('Ministry Staffing'[FTTE_For_Matrix])
+		lineageTag: debc0292-172a-4974-9000-431c7ba1ebf9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Over/Under =
+			
+			[Current FTTE Available]-[Remaining FTTE (Current)]
+		lineageTag: e8a4915a-94e2-4b9f-9cd0-789c2551c266
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Staffing Transfer Agreement' =
+			
+			CALCULATE([Ministry FTTE], 'Ministry Staffing'[Title1]="Staffing Transfer Agreement")
+		lineageTag: eb8db3c7-e449-4c6f-ba11-b76fb5db9729
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Staffing Transfer Pending' =
+			
+			[Transfers Adjusted]-[Staffing Transfer Agreement]
+		lineageTag: 2a52d2e0-8de4-4340-baa6-a35ef5206d6f
+
+	measure 'Summary Values' =
+			
+			VAR SelectedLabel = SELECTEDVALUE(SummaryLabels[Label])
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    SelectedLabel = "MoE Entitlement",  [Ministry FTTE],
+			    SelectedLabel = "Current FTTE Filled", -[EDP FTTE (Current)],
+			    SelectedLabel = "Current FTTE Available",  [Current FTTE Available],
+			    SelectedLabel = "Total Vacancies", -[Remaining FTTE (Current)],
+			    SelectedLabel = "Under / Over",  [Over/Under],
+			
+			    -- 👇 return a line instead of 0
+			    SelectedLabel IN {"---------------------", "----------------------"}, "──────────────"
+			)
+		lineageTag: 270c2821-c4ee-45cc-9b0e-82bdcfe232c1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transfer In (Anticipated)' = ```
+			
+			CALCULATE(SUM('Staffing Adjustment'[FTTE]), 'Staffing Adjustment'[Type] = "Transfer In")
+			
+			```
+		lineageTag: 995b7e1d-f5cf-4d6b-a07e-51f8891f60b5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transfer Out (Anticipated)' =
+			
+			CALCULATE(SUM('Staffing Adjustment'[FTTE]), 'Staffing Adjustment'[Type] = "Transfer Out")
+		lineageTag: 7f99544c-6cc8-4e1a-a3b1-7f144766ec92
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transfers Adjusted' =
+			
+			[Transfer In (Anticipated)] - [Transfer Out (Anticipated)]
+		lineageTag: 9acd5be5-97ed-4353-89fc-010590ba4bca
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Under Over Color' =
+			
+			VAR Label = SELECTEDVALUE(SummaryLabels[Label])
+			VAR Val = [Over/Under]
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    Label <> "Under / Over", BLANK(),
+			    Val < 0, "#FF0000",
+			    Val >= 0, "#008000"
+			)
+		lineageTag: f00d7722-c3b0-4147-aceb-c1dd24352f5b
+
+	partition 'Measure Table' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

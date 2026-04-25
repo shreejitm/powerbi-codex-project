@@ -1,0 +1,122 @@
+table app_employees_employee
+	lineageTag: 4e38d70a-687b-47d8-a55f-3aae79b78d4d
+
+	column email
+		dataType: string
+		lineageTag: 1deca897-80e0-4b0a-a666-f304c21eeb1f
+		summarizeBy: none
+		sourceColumn: email
+
+		annotation SummarizationSetBy = Automatic
+
+	column moe_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 8429240e-dd01-42ec-b573-1d5f28ba55c2
+		summarizeBy: sum
+		sourceColumn: moe_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column user_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 00936ebf-2ab9-483c-93ce-28013875db14
+		summarizeBy: sum
+		sourceColumn: user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_payroll
+		dataType: string
+		lineageTag: f1aeb48a-17ba-4ba7-86cc-014527f18b2c
+		summarizeBy: none
+		sourceColumn: is_payroll
+
+		annotation SummarizationSetBy = Automatic
+
+	column live
+		dataType: string
+		lineageTag: 10f7ad38-e45d-46c1-8871-54446b718e53
+		summarizeBy: none
+		sourceColumn: live
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_of_birth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 12cd6eb1-921a-475b-9a8d-dfff21fa0791
+		summarizeBy: none
+		sourceColumn: date_of_birth
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column legal_name
+		dataType: string
+		lineageTag: 66e8459c-65ac-4f85-8eb2-8fe5d1f7da10
+		summarizeBy: none
+		sourceColumn: legal_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_position_id
+		dataType: int64
+		formatString: 0
+		lineageTag: badd010b-2b2f-4e2e-85d1-5f4f33a6dfb7
+		summarizeBy: sum
+		sourceColumn: primary_position_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column active
+		dataType: string
+		lineageTag: a2c44f79-96ec-40d3-acf7-5094fcc74775
+		summarizeBy: none
+		sourceColumn: active
+
+		annotation SummarizationSetBy = Automatic
+
+	column preferredname_new
+		dataType: string
+		lineageTag: 97550448-07df-4c8b-87a3-437f690be461
+		summarizeBy: none
+		sourceColumn: preferredname_new
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: int64
+		formatString: 0
+		lineageTag: bc8a055e-a38c-492a-924d-d8a03bea0622
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column fullname
+		dataType: string
+		lineageTag: f91bd400-c4a2-4784-b66d-5d8a9c2e1d7a
+		summarizeBy: none
+		sourceColumn: fullname
+
+		annotation SummarizationSetBy = Automatic
+
+	partition app_employees_employee = m
+		mode: import
+		queryGroup: dimension
+		source =
+				let
+				    Source = Odbc.DataSource(Source_odbc, [HierarchicalNavigation=true]),
+				    defaultdb_Database = Source{[Name="defaultdb",Kind="Database"]}[Data],
+				    public_Schema = defaultdb_Database{[Name="public",Kind="Schema"]}[Data],
+				    vws_employees_View = public_Schema{[Name="vws_employees",Kind="View"]}[Data]
+				in
+				    vws_employees_View
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

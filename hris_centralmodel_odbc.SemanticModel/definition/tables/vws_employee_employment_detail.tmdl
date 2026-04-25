@@ -1,0 +1,177 @@
+table vws_employee_employment_detail
+	lineageTag: 50f13a7d-7c00-4899-8e26-c024479f165f
+
+	column employee_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 80d710ee-861d-42c5-a6c7-c773e06bfb46
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = User
+
+	column employment_start_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 2a21528c-accd-40f8-9f5a-b0f54f71a68b
+		summarizeBy: none
+		sourceColumn: employment_start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column employment_end_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: a6d1c7fd-f8ac-4c46-8ab0-9eb1587b1caf
+		summarizeBy: none
+		sourceColumn: employment_end_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column category
+		dataType: string
+		lineageTag: 388ee2f6-4f27-4f5a-a6d0-7081f78574e7
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column detail_start_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 982bc09d-5bf1-48f1-abb3-e4633c3332c9
+		summarizeBy: none
+		sourceColumn: detail_start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column detail_end_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 3f0a70b5-617c-4728-a9f7-1f8bc8952c0b
+		summarizeBy: none
+		sourceColumn: detail_end_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column employment_type
+		dataType: string
+		lineageTag: b10fd159-47cb-4cf3-9727-82f7f290f890
+		summarizeBy: none
+		sourceColumn: employment_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column workbase
+		dataType: int64
+		formatString: 0
+		lineageTag: 63cffee3-99b7-4662-bf58-b3a6b3a48b2b
+		summarizeBy: none
+		sourceColumn: workbase
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_id
+		dataType: int64
+		formatString: 0
+		lineageTag: fbd590c3-b77c-43e4-aba3-e25b4f1b0e9f
+		summarizeBy: none
+		sourceColumn: position_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employment_status
+		dataType: string
+		lineageTag: fad32005-5791-4932-8052-097c60bef786
+		summarizeBy: none
+		sourceColumn: employment_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column edp_fte
+		dataType: double
+		lineageTag: df4306d7-9705-4b04-bae6-7c62258d4d9f
+		summarizeBy: sum
+		sourceColumn: edp_fte
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column acting_position
+		dataType: string
+		lineageTag: 8dc22ff1-5f3c-41da-8e0c-bcb5ef1e5242
+		summarizeBy: none
+		sourceColumn: acting_position
+
+		annotation SummarizationSetBy = Automatic
+
+	column long_term_leave
+		dataType: string
+		lineageTag: 95fc84d0-987d-438a-b2da-b4b2995140bb
+		summarizeBy: none
+		sourceColumn: long_term_leave
+
+		annotation SummarizationSetBy = Automatic
+
+	column secondment
+		dataType: string
+		lineageTag: 0ecaba42-5ba9-488c-8d85-868581b50cfe
+		summarizeBy: none
+		sourceColumn: secondment
+
+		annotation SummarizationSetBy = Automatic
+
+	column cnt
+		dataType: int64
+		formatString: 0
+		lineageTag: a79cc352-8253-4ac4-bb51-b1ca7e0ba878
+		summarizeBy: sum
+		sourceColumn: cnt
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_duplicate
+		dataType: string
+		lineageTag: 9a524336-bed9-416f-a7d6-3bfc947e22ec
+		summarizeBy: none
+		sourceColumn: is_duplicate
+
+		annotation SummarizationSetBy = Automatic
+
+	column edp_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 837021a5-c3c2-4800-a564-5a00dafb4fe3
+		summarizeBy: sum
+		sourceColumn: edp_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vws_employee_employment_detail = m
+		mode: import
+		queryGroup: facts
+		source =
+				let
+				    Source = Odbc.DataSource(Source_odbc, [HierarchicalNavigation=true]),
+				    defaultdb_Database = Source{[Name="defaultdb",Kind="Database"]}[Data],
+				    public_Schema = defaultdb_Database{[Name="public",Kind="Schema"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(public_Schema, each ([Name] = "vws_employee_employment_detail_position")),
+				    vws_employee_employment_detail_position_View = #"Filtered Rows"{[Name="vws_employee_employment_detail_position",Kind="View"]}[Data],
+				    #"Sorted Rows" = Table.Sort(vws_employee_employment_detail_position_View,{{"employee_id", Order.Ascending}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Sorted Rows","0","2",Replacer.ReplaceText,{"category"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

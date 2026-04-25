@@ -1,0 +1,136 @@
+table vws_position_dimension
+	lineageTag: c4748759-c70d-4cbc-92b0-9a6c8053cb83
+
+	column position_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f38605b5-b0bf-412e-99ff-398a98d9861d
+		summarizeBy: none
+		sourceColumn: position_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 503191cf-d601-4f82-8c56-914141d98d40
+		summarizeBy: none
+		sourceColumn: manager_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4ed61689-51a8-47ae-974a-ceb8697deeb4
+		summarizeBy: none
+		sourceColumn: type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_active
+		dataType: int64
+		formatString: 0
+		lineageTag: fe6cea44-8041-4d2b-926f-504dc72d3df3
+		summarizeBy: sum
+		sourceColumn: position_active
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_notes
+		dataType: string
+		lineageTag: b607d48b-b669-499b-950a-31465089f91d
+		summarizeBy: none
+		sourceColumn: position_notes
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_fte
+		dataType: double
+		lineageTag: 1df2b82b-6601-4b83-8729-067ad96c13eb
+		summarizeBy: sum
+		sourceColumn: position_fte
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column recruitment_vacancy
+		dataType: string
+		lineageTag: 660b7091-62eb-4147-931d-66c687b0095f
+		summarizeBy: none
+		sourceColumn: recruitment_vacancy
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ca8e2fb7-3818-4b4e-9f2b-5d0da12cbf1e
+		summarizeBy: none
+		sourceColumn: location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column bware_area_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 15ba0136-6aff-4932-b35d-e6e7bf4c6fa3
+		summarizeBy: sum
+		sourceColumn: bware_area_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column bware_group_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b9a0d44-6a86-4531-b63e-9af7bc73febb
+		summarizeBy: sum
+		sourceColumn: bware_group_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 245fb140-20a3-479c-8147-40912f3c00bf
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column designation_code
+		dataType: string
+		lineageTag: 0f840da2-e465-4b15-af7e-072317cded27
+		summarizeBy: none
+		sourceColumn: designation_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column category_id
+		dataType: string
+		lineageTag: 79bf3bf5-f85f-4d20-a7d0-b00679b0afe0
+		summarizeBy: none
+		sourceColumn: category_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vws_position_dimension = m
+		mode: import
+		queryGroup: dimension
+		source =
+				let
+				    Source = Odbc.DataSource(Source_odbc, [HierarchicalNavigation=true]),
+				    defaultdb_Database = Source{[Name=Database,Kind="Database"]}[Data],
+				    public_Schema = defaultdb_Database{[Name="public",Kind="Schema"]}[Data],
+				    app_employees_credentialtype_Table = public_Schema{[Name="vws_position_dimension",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(app_employees_credentialtype_Table,{{"position_active", Int64.Type}}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Changed Type", "category_id", each if Text.Contains([designation_code], "S12") then 1 else if Text.Contains([designation_code], "S67") then 1 else if Text.Contains([designation_code], "S23") then 1 else if Text.Contains([designation_code], "S36") then 1 else if Text.Contains([designation_code], "S01") then 1 else 2),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Conditional Column",{{"category_id", type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type1", each ([position_id] <> 3167))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

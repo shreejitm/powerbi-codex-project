@@ -1,0 +1,40 @@
+table SummaryLabels
+	lineageTag: 31838f1e-b7e4-40f1-b81a-dbb124cd6ef9
+
+	column Label
+		lineageTag: b5a34bd2-dea9-4dd0-b95b-b87719a2bbd1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Label]
+		sortByColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order
+		formatString: 0
+		lineageTag: 14cf705f-3c02-47fd-9edc-a9264fb5da41
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SummaryLabels = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "Label", STRING,
+				    "Order", INTEGER,
+				    {
+				        {"MoE Entitlement", 1},
+				        {"Current FTTE Filled", 2},
+				        {"---------------------", 3},
+				        {"Current FTTE Available", 4},
+				        {"Total Vacancies", 5},
+				        {"----------------------", 6},  -- 👈 second line
+				        {"Under / Over", 7}
+				    })
+
+	annotation PBI_Id = 072314467553444faafdc59ec4f66173
+
